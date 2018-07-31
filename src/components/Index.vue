@@ -2,6 +2,7 @@
 <div class="index container">
     <div class="card" v-for="smoothie in smoothies" :key="smoothie.id">
         <div class="card-content">
+            <i class="material-icons delete" @click="deleteSmoothie(smoothie.id)">delete</i>
             <h2 class="indigo-text">{{smoothie.title}}</h2>
             <ul class="ingredients">
                 <li v-for="(ing, index) in smoothie.ingredients" :key="index">
@@ -21,14 +22,22 @@ export default {
     data(){
         return {
             smoothies:[
-                {title: 'Ninja', slug:'ninja-brew', ingredients: ['DF', 'FG', 'OP']},
-                {title: 'Morning mood', slug:'ninja-brew', ingredients: ['bananas', 'coffeee', 'milk']},
-                {title: 'Don camillo', slug:'ninja-brew', ingredients: ['bananas', 'coffeee', 'milk']},
-                {title: 'Petit dej', slug:'ninja-brew', ingredients: ['bananas', 'coffeee', 'milk']},
+                {id: 0, title: 'Ninja', slug:'ninja-brew', ingredients: ['DF', 'FG', 'OP']},
+                {id: 1, title: 'Morning mood', slug:'ninja-brew', ingredients: ['bananas', 'coffeee', 'milk']},
+                {id: 2, title: 'Don camillo', slug:'ninja-brew', ingredients: ['bananas', 'coffeee', 'milk']},
+                {id: 3, title: 'Petit dej', slug:'ninja-brew', ingredients: ['bananas', 'coffeee', 'milk']},
             ]
 
         }
+    },
+    methods:{
+        deleteSmoothie(id){
+            this.smoothies = this.smoothies.filter(smoothie => {
+                return smoothie.id != id
+            })
+        }
     }
+
 
 }
 </script>
@@ -53,5 +62,14 @@ export default {
 }
 .index .ingredients li{
     display: inline-block;
+}
+.index .delete{
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    cursor: pointer;
+    color: #aaa;
+    font-size: 1.4em;
+
 }
 </style>
