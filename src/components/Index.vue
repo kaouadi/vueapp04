@@ -17,25 +17,39 @@
 </template>
 
 <script>
+import db from "@/firebase/init";
 export default {
     name: 'Index',
     data(){
         return {
-            smoothies:[
-                {id: 0, title: 'Ninja', slug:'ninja-brew', ingredients: ['DF', 'FG', 'OP']},
-                {id: 1, title: 'Morning mood', slug:'ninja-brew', ingredients: ['bananas', 'coffeee', 'milk']},
-                {id: 2, title: 'Don camillo', slug:'ninja-brew', ingredients: ['bananas', 'coffeee', 'milk']},
-                {id: 3, title: 'Petit dej', slug:'ninja-brew', ingredients: ['bananas', 'coffeee', 'milk']},
-            ]
+            smoothies:[]
 
         }
     },
     methods:{
         deleteSmoothie(id){
-            this.smoothies = this.smoothies.filter(smoothie => {
-                return smoothie.id != id
+
+            db.collection('smoothies').doc(id).delete()
+            .then(() => {
+                this.smoothies = this.smoothies.filter(smoothie => {
+                   return smoothie.id != id 
+                })
             })
+
         }
+    },
+    created(){
+        // fetch data from firestore
+        db.collection('smoothies').get()
+        .then(snapshot => {
+            snapshot.forEach(doc => {
+                //console.log(doc.data());
+                let smoothie = doc.data()
+                smoothie.id = doc.id
+                this.smoothies.push(smoothie)
+            });
+        })
+
     }
 
 
