@@ -7,9 +7,10 @@
          <label for="title"> smoothie Title</label>
          <input type="text" name="title" v-model="title" autocomplete="off">
      </div>
-     <div v-for="(ing, index) in ingredients" :key="index">
+     <div v-for="(ing, index) in ingredients" :key="index" class="field">
          <label for="ingredient">ingredient</label>
          <input type="text" name="ingredient" v-model="ingredients[index]">
+         <i class="material-icons delete" @click="deleteIng(ing)">delete</i>
      </div>
      <div class="field add-ingredient">
          <label for="add-ingredient">Add ingredient</label>
@@ -75,6 +76,13 @@ export default {
             } else{
                 this.feedback = 'You must enter value'
             }
+        },
+        deleteIng(ing){
+            console.log(ing)
+            this.ingredients = this.ingredients.filter(ingredient => {
+                return ingredient != ing
+            })
+
         }
     }
 
@@ -90,6 +98,20 @@ export default {
 .add-smoothie h2{
     font-size: 2em;
     margin: 20px auto;
+}
+.add-smoothie .field{
+    position: relative;
+}
+
+.add-smoothie .delete{
+    position: absolute;
+    right: 0;
+    bottom: 10px;
+    color: #aaa;
+    font-size: 1.4em;
+    cursor: pointer;
+
+
 }
 
 </style>
