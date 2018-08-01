@@ -5,13 +5,18 @@
  <form @submit.prevent="addSmoothie">
      <div class="field title">
          <label for="title"> smoothie Title</label>
-         <input type="text" name="title" v-model="title">
+         <input type="text" name="title" v-model="title" autocomplete="off">
+     </div>
+     <div v-for="(ing, index) in ingredients" :key="index">
+         <label for="ingredient">ingredient</label>
+         <input type="text" name="ingredient" v-model="ingredients[index]">
      </div>
      <div class="field add-ingredient">
          <label for="add-ingredient">Add ingredient</label>
-         <input type="text" name="add-ingredient">
+         <input type="text" name="add-ingredient" @keydown.tab.prevent="addIng" v-model="another" autocomplete="off">
      </div>
      <div class="field center-align">
+         <p v-if="feedback" class="red-text">{{feedback}}</p>
          <button class="btn pink">Add smoothie</button>
      </div>
  </form>
@@ -20,17 +25,56 @@
 </template>
 
 <script>
+import db from "@/firebase/init";
+import slugify from "slugify";
 export default {
     name: 'AddSmoothie',
     data(){
         return {
-            title: null
+            title: null,
+            another: null,
+            ingredients: [],
+            feedback: null,
+            slug: null
 
         }
     },
     methods:{
         addSmoothie(){
-            console.log(this.title)
+            if (this.title) {
+                this.slug = slugify(this.title, {
+                    replacement: '-',
+                    remove: /[$*_+~.()'"!\-:@]/g,
+                    lower: true
+                })
+                //console.log(this.slug)
+                db.collection('smoothie').add({
+                    title: this.title,
+                    ingredients: this.ingredients,
+                    slug: this.slug
+                }).then(() => {
+                    this.$router.push({name: 'Index'})
+                }).catch(err => {
+                    console.log(err)
+                })
+                
+                this.feedback = null
+                
+            } else {
+                this.feedback = 'You must enter value'
+                
+            }
+            //console.log(this.title)
+        },
+        addIng(){
+            
+            if(this.another){
+                this.ingredients.push(this.another)
+                //console.log(this.ingredients)
+                this.another = null
+            } else{
+                this.feedback = 'You must enter value'
+            }
         }
     }
 

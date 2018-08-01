@@ -29,7 +29,7 @@ export default {
     methods:{
         deleteSmoothie(id){
 
-            db.collection('smoothies').doc(id).delete()
+            db.collection('smoothie').doc(id).delete()
             .then(() => {
                 this.smoothies = this.smoothies.filter(smoothie => {
                    return smoothie.id != id 
@@ -40,7 +40,7 @@ export default {
     },
     created(){
         // fetch data from firestore
-        db.collection('smoothies').get()
+        db.collection('smoothie').get()
         .then(snapshot => {
             snapshot.forEach(doc => {
                 //console.log(doc.data());
