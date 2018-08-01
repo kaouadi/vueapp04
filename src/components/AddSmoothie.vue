@@ -48,7 +48,7 @@ export default {
                     remove: /[$*_+~.()'"!\-:@]/g,
                     lower: true
                 })
-                //console.log(this.slug)
+                console.log(this.slug)
                 db.collection('smoothie').add({
                     title: this.title,
                     ingredients: this.ingredients,
