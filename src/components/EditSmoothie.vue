@@ -1,6 +1,25 @@
 <template>
 <div class="edit-smoothie container" v-if="smoothie">
     <h2 class="edit-smoothie">  {{smoothie.title}} smoothie</h2>
+    <form @submit.prevent="editSmoothie">
+     <div class="field title">
+         <label for="title"> Smoothie Title</label>
+         <input type="text" name="title" v-model="smoothie.title" autocomplete="off">
+     </div>
+     <div v-for="(ing, index) in smoothie.ingredients" :key="index" class="field">
+         <label for="ingredient">ingredient</label>
+         <input type="text" name="ingredient" v-model="smoothie.ingredients[index]">
+         <i class="material-icons delete" @click="deleteIng(ing)">delete</i>
+     </div>
+     <div class="field add-ingredient">
+         <label for="add-ingredient">Add ingredient</label>
+         <input type="text" name="add-ingredient" @keydown.tab.prevent="addIng" v-model="another" autocomplete="off">
+     </div>
+     <div class="field center-align">
+         <p v-if="feedback" class="red-text">{{feedback}}</p>
+         <button class="btn pink">Update smoothie</button>
+     </div>
+ </form>
 
 </div>
     
@@ -12,7 +31,9 @@ export default {
     name: 'EditSmoothie',
     data(){
         return{
-            smoothie: null
+            smoothie: null,
+            another: null,
+            feedback: null
         }
     },
     created(){
@@ -23,11 +44,60 @@ export default {
                 this.smoothie.id = doc.id
             });
         })
+    },
+    methods:{
+
+        editSmoothie(){
+           console.log(this.smoothie.title)
+           console.log(this.smoothie.ingredients)
+        },
+
+        addIng(){
+            
+            if(this.another){
+                this.smoothie.ingredients.push(this.another)
+                //console.log(this.ingredients)
+                this.another = null
+                this.feedback = null
+            } else{
+                this.feedback = 'You must enter value'
+            }
+        },
+        deleteIng(ing){
+            console.log(ing)
+            this.smoothie.ingredients = this.smoothie.ingredients.filter(ingredient => {
+                return ingredient != ing
+            })
+
+        }
     }
 
 }
 </script>
 
 <style>
+.edit-smoothie{
+    margin-top: 60px;
+    padding: 20px;
+    max-width: 500px;
+}
+.edit-smoothie h2{
+    font-size: 2em;
+    margin: 20px auto;
+}
+.edit-smoothie .field{
+    position: relative;
+}
+
+.edit-smoothie .delete{
+    position: absolute;
+    right: 0;
+    bottom: 10px;
+    color: #aaa;
+    font-size: 1.4em;
+    cursor: pointer;
+
+
+}
 
 </style>

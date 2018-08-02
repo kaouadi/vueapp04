@@ -73,6 +73,7 @@ export default {
                 this.ingredients.push(this.another)
                 //console.log(this.ingredients)
                 this.another = null
+                this.feedback = null
             } else{
                 this.feedback = 'You must enter value'
             }
